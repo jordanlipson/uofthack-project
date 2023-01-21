@@ -7,7 +7,32 @@ import { drawPoint, drawSegment } from "../utilities";
 
 
 
+// Hook
+function useWindowSize() {
+  // Initialize state with undefined width/height so server and client renders match
 
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+  return windowSize;
+}
 
 function Camera() {
 
@@ -104,45 +129,41 @@ function Camera() {
   }
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-
-    // const webcam = webcamRef.current;
-
-    canvas.width = document.getElementById('webcam').clientWidth;
-    canvas.height = document.getElementById('webcam').clientHeight;
     runMovenet();
   }, []);
   
+  const size = useWindowSize();
+  const isLandscape = size.height <= size.width;
+  const ratio = isLandscape ? size.width / size.height : size.height / size.width;
 
   return (
     <div className="App">
       <header className="App-header">
-      <Webcam 
-          videoConstraints={{facingMode: 'user', width: 1280, height: 720}}
-          id="webcam"
-          ref={webcamRef}
-          style={{
-            position: 'absolute',
-  
-            height: "84.5%",
-            width: "84.5%",
-            // objectFit: "fill",
-            padding: '0px',
-          }}
-        />
-        <canvas
-          ref={canvasRef}
-          id="my-canvas"
-          // right = "100px"
-          style={{
+        <Webcam 
+            videoConstraints={{facingMode: 'user', aspectRatio: ratio}}
+            id="webcam"
+            ref={webcamRef}
+            height={size.height}
+            width={size.width}
 
-            display: 'grid',
-            position: 'absolute',
-   
-            // objectFit: "cover",
-            zIndex: 1
-          }}
-        />
+            style={{
+              position: 'absolute',
+              padding: '0px',
+    
+            }}
+          />
+          <canvas
+            ref={canvasRef}
+            id="my-canvas"
+
+            height={size.height}
+            width={size.width}
+            style={{
+              position: 'absolute',
+    
+              zIndex: 1
+            }}
+          />
       </header>
     </div>
   );
