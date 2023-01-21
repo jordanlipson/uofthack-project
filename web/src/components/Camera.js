@@ -6,7 +6,11 @@ import Webcam from "react-webcam";
 import { drawPoint, drawSegment } from "../utilities";
 
 
+
+
+
 function Camera() {
+
   let skeletonColor = 'rgb(255,255,255)';
   const keypointConnections = {
     nose: ['left_ear', 'right_ear'],
@@ -44,6 +48,7 @@ function Camera() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
+  
   async function runMovenet(){
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
@@ -99,6 +104,12 @@ function Camera() {
   }
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+
+    // const webcam = webcamRef.current;
+
+    canvas.width = document.getElementById('webcam').clientWidth;
+    canvas.height = document.getElementById('webcam').clientHeight;
     runMovenet();
   }, []);
   
@@ -107,29 +118,31 @@ function Camera() {
     <div className="App">
       <header className="App-header">
       <Webcam 
-          width='640px'
-          height='480px'
+          videoConstraints={{facingMode: 'user', width: 1280, height: 720}}
           id="webcam"
           ref={webcamRef}
           style={{
             position: 'absolute',
-            left: 120,
-            top: 100,
+  
+            height: "84.5%",
+            width: "84.5%",
+            // objectFit: "fill",
             padding: '0px',
           }}
         />
-          <canvas
-            ref={canvasRef}
-            id="my-canvas"
-            width='640px'
-            height='480px'
-            style={{
-              position: 'absolute',
-              left: 120,
-              top: 100,
-              zIndex: 1
-            }}
-          />
+        <canvas
+          ref={canvasRef}
+          id="my-canvas"
+          // right = "100px"
+          style={{
+
+            display: 'grid',
+            position: 'absolute',
+   
+            // objectFit: "cover",
+            zIndex: 1
+          }}
+        />
       </header>
     </div>
   );
