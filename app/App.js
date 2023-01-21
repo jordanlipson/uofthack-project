@@ -4,18 +4,30 @@ import * as React from 'react';
 import { Button, View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FlatButton from './shared/button.js';
 
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Welcome</Text>
+      <Text>Welcome to APPNAME</Text>
       <Button
-        title="Open Camera"
-        onPress={() => navigation.navigate('Camera')}
+        // title="Open Camera"
+        // onPress={() => navigation.navigate('Camera')}
+        title="Get Started"
+        onPress={() => navigation.navigate('Workouts')}
         // onPress={startCamera}
       />
     </View>
   );
+}
+
+function WorkoutsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <FlatButton text='Squat' onPress={() => navigation.navigate('Camera')}/>
+      <FlatButton text='Bicep Curl' onPress={() => navigation.navigate('Camera')}/>
+    </View>
+  )
 }
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +37,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" options={{ title: 'Home' }} component={HomeScreen} />
+        <Stack.Screen name="Workouts" component={WorkoutsScreen} />
         <Stack.Screen name="Camera" component={CameraPage} />
       </Stack.Navigator>
     </NavigationContainer>
