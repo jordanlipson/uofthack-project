@@ -1,16 +1,18 @@
-import React, { useRef, useEffect, useState } from "react";
+import react from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import * as tf from "@tensorflow/tfjs";
-import * as poseDetection from '@tensorflow-models/pose-detection';
-import Webcam from "react-webcam";
-import { drawPoint, drawSegment } from "./utilities";
-
+import Home from "./components/Home";
+import Camera from "./components/Camera";
 
 function App() {
-
   return (
     <div className="App">
-      <h1>Hi</h1>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/camera" element={<Camera />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
