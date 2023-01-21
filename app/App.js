@@ -1,42 +1,38 @@
+import CameraPage from './camera.js'
 import { Camera, CameraType } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as React from 'react';
+import { Button, View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-
-  if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
-
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
-
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Welcome</Text>
+      <Button
+        title="Open Camera"
+        onPress={() => navigation.navigate('Camera')}
+        // onPress={startCamera}
+      />
     </View>
   );
 }
+
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" options={{ title: 'Home' }} component={HomeScreen} />
+        <Stack.Screen name="Camera" component={CameraPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
+
 
 const styles = StyleSheet.create({
   container: {
