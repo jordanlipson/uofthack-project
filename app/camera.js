@@ -1,6 +1,8 @@
 import { Camera, CameraType } from 'expo-camera';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FlipIcon from './assets/camera-flip-icon.svg'
+import Svg from "react-native-svg"
 
 export default function CameraPage() {
   const [type, setType] = useState(CameraType.back);
@@ -30,8 +32,11 @@ export default function CameraPage() {
       <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
+            <FlipIcon width={150} height={60}/>
+            {/* <FlipIcon /> */}
+
           </TouchableOpacity>
+
         </View>
       </Camera>
     </View>
@@ -50,7 +55,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'transparent',
-    margin: 64,
+    margin: 25,
+
   },
   button: {
     flex: 1,
@@ -62,4 +68,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+
 });
