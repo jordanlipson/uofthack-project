@@ -3,8 +3,8 @@ import lungeImage from "../images/icons8-lunges-64.png"
 
 const Lunge = () => {
     return (
-        <div>
-            <img style={{ width: "15%" }} src={lungeImage} alt='Lunge' />
+        <div style={{ width: "271px" }}>
+            <img style={{ width: "20%" }} src={lungeImage} alt='Lunge' />
         </div>
     )
 }

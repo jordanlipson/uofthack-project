@@ -8,22 +8,13 @@ import Camera from "./components/Camera";
 function App() {
   return (
     <div className="App">
-      {/* <Home />
-      <Workouts /> */}
       
       <Router>
         <Routes>
           <Route path="/uofthack-project" element={<Home />} />
-          {/* <Route path="/workouts" element={<Workouts />} /> */}
           <Route path='/camera' element={<Camera />} />
         </Routes>
       </Router>
-
-      {/* <Router>
-        <Routes>
-          <Route path="/camera" element={<Camera />} />
-        </Routes>
-      </Router> */}
     </div>
   );
 }
