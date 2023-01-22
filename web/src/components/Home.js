@@ -1,11 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import "./Home.css"
+import Button from '@mui/material/Button';
 
 const Home = () => {
+
     return (
-        <div>
-            <h1>Home Page</h1>
-            <Link to="/camera">CAMERA</Link>
+        // <div>
+        //     <h1>Welcome to APPNAME</h1>
+        //     <Link to="/camera">CAMERA</Link>
+        // </div>
+        <div className='home' id='home'>
+            <h1>Welcome to APPNAME</h1>
+            <div class='bottom'>
+                {/* <a href='/workouts' onClick={closeMenu} smooth={true} duration={1000} spy={true}>
+                    <button id='startButton'>Get Started</button>
+                </a> */}
+                <Button id='startButton' variant="contained" href="#workouts" smooth={true} duration={1000} spy={true}>Get Started</Button>
+            </div>
         </div>
     )
 }

@@ -1,0 +1,25 @@
+
+/* .home {
+    margin-top: 10%;
+} */
+
+#startButton {
+    background-color: #023020;
+    color: #FFF;
+}
+
+.bottom {
+    flex: 1;
+    justify-content: flex-end;
+    padding-top: 50%;
+}
+
+@media screen and (max-width: 940px) {
+    .home {
+        max-width: 100%;
+        margin-top: 20%;
+    }
+    .bottom {
+        padding-top: 95%;
+    }
+}

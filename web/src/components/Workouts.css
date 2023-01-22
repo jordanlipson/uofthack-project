@@ -1,0 +1,23 @@
+.container {
+    flex: 1;
+    justify-content: 'center';
+    margin-top: 2em;
+    margin-right: 5vw;
+    margin-left: 5vw;
+}
+
+.workouts {
+    padding-top: 15%;
+    padding-bottom: 4em;
+}
+
+.button {
+    height: 6em;
+    border-radius: 15px;
+}
+
+@media screen and (max-width: 940px) {
+    .workouts {
+        padding-top: 30%;
+    }
+}
