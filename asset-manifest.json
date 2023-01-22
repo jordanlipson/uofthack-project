@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/uofthack-project/static/css/main.c40d3830.css",
-    "main.js": "/uofthack-project/static/js/main.40d41756.js",
+    "main.css": "/uofthack-project/static/css/main.74e02cbe.css",
+    "main.js": "/uofthack-project/static/js/main.4d9ce49d.js",
     "static/js/787.d1d4a2c2.chunk.js": "/uofthack-project/static/js/787.d1d4a2c2.chunk.js",
     "static/media/musculous-arm-silhouette-svgrepo-com.svg": "/uofthack-project/static/media/musculous-arm-silhouette-svgrepo-com.8e3c0de287ab5539d8ef33fd18df81c1.svg",
     "index.html": "/uofthack-project/index.html",
-    "main.c40d3830.css.map": "/uofthack-project/static/css/main.c40d3830.css.map",
-    "main.40d41756.js.map": "/uofthack-project/static/js/main.40d41756.js.map",
+    "main.74e02cbe.css.map": "/uofthack-project/static/css/main.74e02cbe.css.map",
+    "main.4d9ce49d.js.map": "/uofthack-project/static/js/main.4d9ce49d.js.map",
     "787.d1d4a2c2.chunk.js.map": "/uofthack-project/static/js/787.d1d4a2c2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c40d3830.css",
-    "static/js/main.40d41756.js"
+    "static/css/main.74e02cbe.css",
+    "static/js/main.4d9ce49d.js"
   ]
 }
