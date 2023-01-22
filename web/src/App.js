@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, HashRouter, Route, Routes } from "react-router-dom";
 import "./components/App.css"
 import Home from "./components/Home";
 import Workouts from "./components/Workouts.js"
@@ -11,7 +11,7 @@ function App() {
       <Home />
       <Workouts />
 
-      <Router>
+      <Router baseline=''>
         <Routes>
           <Route path="/camera" element={<Camera />} />
         </Routes>
