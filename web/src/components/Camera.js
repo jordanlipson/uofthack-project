@@ -3,9 +3,7 @@ import "./App.css";
 import * as tf from "@tensorflow/tfjs";
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import Webcam from "react-webcam";
-import { drawPoint, drawSegment } from "../utilities";
-
-
+import { drawPoint, drawSegment, keypointConnections, POINTS, find_angle, speak } from "../utilities";
 
 // Hook
 function useWindowSize() {
@@ -37,44 +35,27 @@ function useWindowSize() {
 function Camera() {
 
   let skeletonColor = 'rgb(255,255,255)';
-  const keypointConnections = {
-    nose: ['left_ear', 'right_ear'],
-    left_ear: ['left_shoulder'],
-    right_ear: ['right_shoulder'],
-    left_shoulder: ['right_shoulder', 'left_elbow', 'left_hip'],
-    right_shoulder: ['right_elbow', 'right_hip'],
-    left_elbow: ['left_wrist'],
-    right_elbow: ['right_wrist'],
-    left_hip: ['left_knee', 'right_hip'],
-    right_hip: ['right_knee'],
-    left_knee: ['left_ankle'],
-    right_knee: ['right_ankle']
-  }
-  const POINTS = {
-    NOSE : 0,
-    LEFT_EYE : 1,
-    RIGHT_EYE : 2,
-    LEFT_EAR : 3,
-    RIGHT_EAR : 4,
-    LEFT_SHOULDER : 5,
-    RIGHT_SHOULDER : 6,
-    LEFT_ELBOW : 7,
-    RIGHT_ELBOW : 8,
-    LEFT_WRIST : 9,
-    RIGHT_WRIST : 10,
-    LEFT_HIP : 11,
-    RIGHT_HIP : 12,
-    LEFT_KNEE : 13,
-    RIGHT_KNEE : 14,
-    LEFT_ANKLE : 15,
-    RIGHT_ANKLE : 16,
-  }
 
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+  const [prompt, setPrompt] = useState("This is defualt text");
+  const [counter, setCounter] = useState(0);
+  const [playStatus, setPlayStatus] = useState("_play");
 
+  function instructions(text){
+    speechSynthesis.cancel()
+    setPlayStatus(prev => {
+      if (prev === "_play") {
+      // if uncommenting code above, replace textToRead with text here
+        speak(text, setPlayStatus, window.speechSynthesis)
+        return "_pause"
+      }
+      return "_play"
+    })
+  }
   
   async function runMovenet(){
+    // console.log(this.props.data);
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
     };
@@ -92,7 +73,6 @@ function Camera() {
     ) {
       const video = webcamRef.current.video;
       const pose = await detector.estimatePoses(video);
-      // console.log(pose);
       const ctx = canvasRef.current.getContext('2d');
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       const keypoints = pose[0].keypoints;
@@ -111,21 +91,94 @@ function Camera() {
                 , skeletonColor, 1, ctx);
               })
             } catch(err) {
-              console.log("error drawing segment", err);
+              // console.log("error drawing segment", err);
             }
             
           }
         } 
-        return [keypoint.x, keypoint.y]
+        return [-keypoint.x, keypoint.y]
       }) 
+      bicepCurl(keypoints);
     }
   }
 
-  function find_angle(A,B,C) {
-    var AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));    
-    var BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2)); 
-    var AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
-    return Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
+  function bicepCurl(keypoints){
+    let angleRight = find_angle(
+      {x: keypoints[POINTS["RIGHT_SHOULDER"]].x, y: keypoints[POINTS["RIGHT_SHOULDER"]].y},
+      {x: keypoints[POINTS["RIGHT_ELBOW"]].x, y: keypoints[POINTS["RIGHT_ELBOW"]].y},
+      {x: keypoints[POINTS["RIGHT_WRIST"]].x, y: keypoints[POINTS["RIGHT_WRIST"]].y},
+      ) * 180 / Math.PI;
+
+    let angleLeft = find_angle(
+      {x: keypoints[POINTS["LEFT_SHOULDER"]].x, y: keypoints[POINTS["LEFT_SHOULDER"]].y},
+      {x: keypoints[POINTS["LEFT_ELBOW"]].x, y: keypoints[POINTS["LEFT_ELBOW"]].y},
+      {x: keypoints[POINTS["LEFT_WRIST"]].x, y: keypoints[POINTS["LEFT_WRIST"]].y},
+      ) * 180 / Math.PI;
+
+
+    let leftSide = find_angle(
+      {x: keypoints[POINTS["LEFT_ELBOW"]].x, y: keypoints[POINTS["LEFT_ELBOW"]].y},
+      {x: keypoints[POINTS["LEFT_SHOULDER"]].x, y: keypoints[POINTS["LEFT_SHOULDER"]].y},
+      {x: keypoints[POINTS["LEFT_HIP"]].x, y: keypoints[POINTS["LEFT_HIP"]].y},
+      ) * 180 / Math.PI;
+
+    let rightSide = find_angle(
+      {x: keypoints[POINTS["RIGHT_ELBOW"]].x, y: keypoints[POINTS["RIGHT_ELBOW"]].y},
+      {x: keypoints[POINTS["RIGHT_SHOULDER"]].x, y: keypoints[POINTS["RIGHT_SHOULDER"]].y},
+      {x: keypoints[POINTS["RIGHT_HIP"]].x, y: keypoints[POINTS["RIGHT_HIP"]].y},
+      ) * 180 / Math.PI;
+
+    console.log(rightSide, leftSide);
+    if (angleRight > 160 && angleLeft > 160){
+      setPrompt("down");
+      skeletonColor = 'rgb(0,255,0)';
+      return;
+    }
+    else if (angleRight < 45 && angleLeft < 45 && skeletonColor != 'rgb(255,255,255)') {
+      setPrompt("up");
+      skeletonColor = 'rgb(255,255,255)';
+      setCounter(counter => counter + 1);  
+      return;
+    } 
+  }
+
+  async function lunge(keypoints){
+    if (keypoints[POINTS["RIGHT_HIP"]].score < 0.45 || keypoints[POINTS["LEFT_HIP"]].score < 0.45){
+      setPrompt("Adjust your camera");
+      skeletonColor = 'rgb(255,255,255)';
+      return;
+    }
+    let angleRight = find_angle(
+      {x: keypoints[POINTS["RIGHT_HIP"]].x, y: keypoints[POINTS["RIGHT_HIP"]].y},
+      {x: keypoints[POINTS["RIGHT_KNEE"]].x, y: keypoints[POINTS["RIGHT_KNEE"]].y},
+      {x: keypoints[POINTS["RIGHT_ANKLE"]].x, y: keypoints[POINTS["RIGHT_ANKLE"]].y},
+      ) * 180 / Math.PI;
+
+    let angleLeft = find_angle(
+      {x: keypoints[POINTS["LEFT_HIP"]].x, y: keypoints[POINTS["LEFT_HIP"]].y},
+      {x: keypoints[POINTS["LEFT_KNEE"]].x, y: keypoints[POINTS["LEFT_KNEE"]].y},
+      {x: keypoints[POINTS["LEFT_ANKLE"]].x, y: keypoints[POINTS["LEFT_ANKLE"]].y},
+      ) * 180 / Math.PI;
+      // setPrompt("Please correct your form")
+      if(angleRight > 100 && angleLeft > 100) {
+        setPrompt("Please correct your form")
+        skeletonColor = 'rgb(255,0,0)';
+      } else {
+        // instructions("Good job!");
+        setPrompt("Correct. Hold for 15 seconds")
+        skeletonColor = 'rgb(0,255,0)';
+        instructions("Try to correct your posture");
+      }
+
+      if (skeletonColor == 'rgb(255,255,255)'){
+        console.log("2", skeletonColor);
+      }
+      if (skeletonColor === 'rgb(0,255,0)'){
+        console.log("1", skeletonColor);
+      }
+      if (skeletonColor === 'rgb(255,0,0)'){
+        console.log("3", skeletonColor);
+      }
   }
 
   useEffect(() => {
