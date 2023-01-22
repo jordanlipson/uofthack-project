@@ -4,6 +4,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import Webcam from "react-webcam";
 import { drawPoint, drawSegment, keypointConnections, POINTS, find_angle, speak } from "../utilities";
+import { useLocation } from "react-router-dom";
 
 // Hook
 function useWindowSize() {
@@ -32,7 +33,7 @@ function useWindowSize() {
   return windowSize;
 }
 
-function Camera() {
+function Camera(props) {
 
   let skeletonColor = 'rgb(255,255,255)';
 
@@ -54,17 +55,18 @@ function Camera() {
     })
   }
   
+  const { state } = useLocation();
   async function runMovenet(){
-    // console.log(this.props.data);
+    console.log(state);
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
     };
     const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
     setInterval(() => { 
-        detectPose(detector)
+      detectPose(detector)
     }, 100)
   }
-
+  
   async function detectPose(detector){
     if (
       typeof webcamRef.current !== "undefined" &&
@@ -98,7 +100,12 @@ function Camera() {
         } 
         return [-keypoint.x, keypoint.y]
       }) 
-      bicepCurl(keypoints);
+      if (state.exercise == 'bicep') {
+        bicepCurl(keypoints);
+      }
+      if (state.exercise == 'lunge') {
+        lunge(keypoints);
+      }
     }
   }
 
@@ -128,7 +135,7 @@ function Camera() {
       {x: keypoints[POINTS["RIGHT_HIP"]].x, y: keypoints[POINTS["RIGHT_HIP"]].y},
       ) * 180 / Math.PI;
 
-    console.log(rightSide, leftSide);
+    // console.log(rightSide, leftSide);
     if (angleRight > 160 && angleLeft > 160){
       setPrompt("down");
       skeletonColor = 'rgb(0,255,0)';

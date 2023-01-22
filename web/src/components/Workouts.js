@@ -11,8 +11,8 @@ import Lunge from "./Lunge";
 const Workouts = () => {
     const navigate = useNavigate();
 
-    function handleClick() {
-        navigate("/camera")
+    function handleClick(data) {
+        navigate("/camera", { state: { exercise: data } })
     }
 
     return (
@@ -20,11 +20,11 @@ const Workouts = () => {
             <h3>How are you moving today?</h3>
             <div className="container">
                 <Stack direction="column" spacing={2}>
-                    <Button className="button" variant="contained" onClick={handleClick} startIcon={<BicepCurl />}>Bicep Curl</Button>
-                    <Button className="button" variant="contained" startIcon={<Lunge />}>Lunge</Button>
-                    <Button className="button" variant="contained" startIcon={<BicepCurl />}>Shoulder Overhead Press</Button>
-                    <Button className="button" variant="contained" startIcon={<BicepCurl />}>Squat</Button>
-                    <Button className="button" variant="contained" startIcon={<BicepCurl />}>Plank</Button>
+                    <Button className="button" variant="contained" onClick={()=>handleClick("bicep")} startIcon={<BicepCurl />}>Bicep Curl</Button>
+                    <Button className="button" variant="contained" onClick={()=>handleClick("lunge")} startIcon={<Lunge />}>Lunge</Button>
+                    <Button className="button" variant="contained" onClick={()=>handleClick("lunge")} startIcon={<BicepCurl />}>Shoulder Overhead Press</Button>
+                    <Button className="button" variant="contained" onClick={()=>handleClick("lunge")} startIcon={<BicepCurl />}>Squat</Button>
+                    <Button className="button" variant="contained" onClick={()=>handleClick("lunge")} startIcon={<BicepCurl />}>Plank</Button>
                 </Stack>
             </div>
         </div>
