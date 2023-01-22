@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/uofthack-project/static/css/main.c40d3830.css",
-    "main.js": "/uofthack-project/static/js/main.b78c42c3.js",
+    "main.js": "/uofthack-project/static/js/main.40d41756.js",
     "static/js/787.d1d4a2c2.chunk.js": "/uofthack-project/static/js/787.d1d4a2c2.chunk.js",
     "static/media/musculous-arm-silhouette-svgrepo-com.svg": "/uofthack-project/static/media/musculous-arm-silhouette-svgrepo-com.8e3c0de287ab5539d8ef33fd18df81c1.svg",
     "index.html": "/uofthack-project/index.html",
     "main.c40d3830.css.map": "/uofthack-project/static/css/main.c40d3830.css.map",
-    "main.b78c42c3.js.map": "/uofthack-project/static/js/main.b78c42c3.js.map",
+    "main.40d41756.js.map": "/uofthack-project/static/js/main.40d41756.js.map",
     "787.d1d4a2c2.chunk.js.map": "/uofthack-project/static/js/787.d1d4a2c2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c40d3830.css",
-    "static/js/main.b78c42c3.js"
+    "static/js/main.40d41756.js"
   ]
 }
