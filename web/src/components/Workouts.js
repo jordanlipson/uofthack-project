@@ -12,7 +12,7 @@ const Workouts = () => {
             <h3>How are you moving today?</h3>
             <div className="container">
                 <Stack direction="column" spacing={2}>
-                    <Button className="button" variant="contained" href="camera" startIcon={<BicepCurl />}>Bicep Curl</Button>
+                    <Button className="button" variant="contained" href="/camera" startIcon={<BicepCurl />}>Bicep Curl</Button>
                     <Button className="button" variant="contained" startIcon={<Lunge />}>Lunge</Button>
                     <Button className="button" variant="contained" startIcon={<BicepCurl />}>Shoulder Overhead Press</Button>
                     <Button className="button" variant="contained" startIcon={<BicepCurl />}>Squat</Button>
